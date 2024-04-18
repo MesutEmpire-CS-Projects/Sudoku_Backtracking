@@ -125,55 +125,22 @@ def count_constraints(board, row, col, value):
                 constraints += 1
     return constraints
 
-
 def forward_check(board, row, col, value):
-    """
-       Perform forward checking.
-    """
+    # Perform forward checking
     for i in range(9):
-        if board[row][i] == 0:
-            board[row][i] = -value
-        if board[i][col] == 0:
-            board[i][col] = -value
-    box_row, box_col = row // 3 * 3, col // 3 * 3
-    for i in range(box_row, box_row + 3):
-        for j in range(box_col, box_col + 3):
-            if board[i][j] == 0:
-                board[i][j] = -value
-
-#
-# def forward_check(board, row, col, value):
-#     # Perform forward checking
-#     for i in range(9):
-#         if i != col and board[row][i] == 0:  # Exclude the current cell
-#             if not mac(board, row, i, value):
-#                 return False
-#         if i != row and board[i][col] == 0:  # Exclude the current cell
-#             if not mac(board, i, col, value):
-#                 return False
-#     box_row_start, box_col_start = (row // 3) * 3, (col // 3) * 3
-#     for i in range(box_row_start, box_row_start + 3):
-#         for j in range(box_col_start, box_col_start + 3):
-#             if i != row and j != col and board[i][j] == 0:  # Exclude the current cell
-#                 if not mac(board, i, j, value):
-#                     return False
-#     return True
-
-
-def unforward_check(board, row, col, value):
-    """
-     Undo forward checking.
-     """
-    for i in range(9):
-        if board[row][i] == -value:
-            board[row][i] = 0
-        if board[i][col] == -value:
-            board[i][col] = 0
-    box_row, box_col = row // 3 * 3, col // 3 * 3
-    for i in range(box_row, box_row + 3):
-        for j in range(box_col, box_col + 3):
-            if board[i][j] == -value:
-                board[i][j] = 0
+        if i != col and board[row][i] == 0:  # Exclude the current cell
+            if not mac(board, row, i, value):
+                return False
+        if i != row and board[i][col] == 0:  # Exclude the current cell
+            if not mac(board, i, col, value):
+                return False
+    box_row_start, box_col_start = (row // 3) * 3, (col // 3) * 3
+    for i in range(box_row_start, box_row_start + 3):
+        for j in range(box_col_start, box_col_start + 3):
+            if i != row and j != col and board[i][j] == 0:  # Exclude the current cell
+                if not mac(board, i, j, value):
+                    return False
+    return True
 
 
 def mac(board, row, col, value):
@@ -212,7 +179,6 @@ def backtrack(board, empty_cells):
             if backtrack(board, empty_cells[1:]):
                 return True
             board[row][col] = 0
-            unforward_check(board, row, col, value)
     return False
 
 
